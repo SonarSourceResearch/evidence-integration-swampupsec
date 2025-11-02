@@ -76,7 +76,7 @@ jobs:
         echo "📦 Updated version to 1.0.0-${{ github.run_number }}"
         
         # Build and deploy to Artifactory
-        jf mvn deploy -X -Dscan=false -q --batch-mode --no-transfer-progress --build-name quoteofday --build-number ${{ github.run_number }}
+        jf mvn deploy -Dscan=false -q --batch-mode --no-transfer-progress --build-name quoteofday --build-number ${{ github.run_number }}
         
     - name: Get artifact SHA256
       id: get_sha256
