@@ -11,7 +11,7 @@ spec:
       volumes:
       - name: jf-secrets-volume
         secret:
-          secretName: apptrustswampupc-jf-cli
+          secretName: swampupsec-jf-cli
       - name: signing-key
         secret:
           secretName: evd-signing-key
@@ -111,7 +111,7 @@ spec:
 
             # Configure JSON CLI
             export CI="true"
-            export JFROG_CLI_URL="https://apptrustswampupc.jfrog.io"
+            export JFROG_CLI_URL="https://swampupsec.jfrog.io"
             export JFROG_CLI_TOKEN=$(cat /etc/jfsecrets/JF_TOKEN)
             if [ "" == "$JFROG_CLI_TOKEN" ]; then
                 echo "JF_TOKEN secret is empty."
@@ -119,7 +119,7 @@ spec:
             fi
 
             echo "Adding configuration to JF CLI."
-            jf c add apptrustswampupc --interactive=false --overwrite=true --url "$JFROG_CLI_URL" --access-token "$JFROG_CLI_TOKEN"
+            jf c add swampupsec --interactive=false --overwrite=true --url "$JFROG_CLI_URL" --access-token "$JFROG_CLI_TOKEN"
             if [ $? -ne 0 ]; then
                 "Failed to configure JF CLI."
                 exit 1
