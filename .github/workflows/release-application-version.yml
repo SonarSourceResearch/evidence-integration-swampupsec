@@ -1,5 +1,6 @@
 name: Release Application
 
+
 on:
   workflow_dispatch:
 permissions:

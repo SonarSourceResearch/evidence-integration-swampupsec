@@ -1,5 +1,6 @@
 name: Quote of Day Service CI
 
+
 on:
   push:
     branches:

@@ -1,5 +1,6 @@
 name: Quotopia UI Service CI
 
+
 on:
   push:
     branches:
