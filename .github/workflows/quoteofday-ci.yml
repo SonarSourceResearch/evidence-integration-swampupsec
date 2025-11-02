@@ -66,7 +66,7 @@ jobs:
 
     - name: Setup Maven
       run: |
-        jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases evidence-demo-libs-release --repo-resolve-snapshots evidence-demo-libs-snapshot --repo-deploy-releases evidence-demo-libs-release --repo-deploy-snapshots evidence-demo-libs-snapshot
+        jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases quotopia-proj-dev-maven-virt --repo-resolve-snapshots quotopia-proj-dev-maven-virt --repo-deploy-releases quotopia-proj-dev-maven-virt --repo-deploy-snapshots quotopia-proj-dev-maven-virt
       
     - name: Build and Deploy to Artifactory
       run: |
