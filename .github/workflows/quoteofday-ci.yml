@@ -102,19 +102,6 @@ jobs:
 
         echo "Retrieved SHA256: ${SHA256}"
         echo "sha256=${SHA256}" >> $GITHUB_OUTPUT
-#
-#    - name: Gradle Develociity Scan
-#      uses: gradle/develocity-provenance-governor-actions/publish@v0.5.0
-#      with:
-#        attestation-publisher-url: 'https://develocity-provenance-governor.sdlc-demo.gradle.com'
-#        tenant: default
-#        build-scan-queries: 'value:"CI run=${{ github.run_id }}"'
-#        subject-type: maven
-#        subject-namespace: com.example
-#        subject-name: quote-of-day-service
-#        subject-version: 1.0.0-${{ github.run_number }}
-#        subject-digest: ${{ steps.get_sha256.outputs.sha256 }}
-#        subject-repository-url: swampupsec.jfrog.io/quotopia-proj-dev-maven-virt-local 
 
     - name: Compile java for Sonar scan
       run: |
@@ -135,14 +122,6 @@ jobs:
           -Dsonar.qualitygate.wait=false
           -Dsonar.exclusions=**/*.sh,**/*.xml,**/*.yml,**/*.yaml*,**/*.py,**/*.go,**/*.css,**/*.js,**/argocd/*,**/e2e-tests/*,**/jira/*,**/quotopia-ui/*,**/translate/*
 
-#    - name: Create Test Evidence JSON
-#      run: |
-#        cd quoteofday
-#        mkdir -p evidence
-#        
-#        # Run the conversion script to create evidence file with markdown report
-#        ./scripts/convert-test-reports.sh target/surefire-reports 
-      
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       
@@ -170,32 +149,11 @@ jobs:
         set +e
         echo "🔍 Creating evidence on docker image..."
         cd quoteofday || exit 1
-#        jf evd create --subject-repo-path quotopia-proj-dev-docker/quoteofday/${{ github.run_number }}/list.manifest.json  \
-#          --predicate ./test-evidence.json --predicate-type https://jfrog.com/evidence/test-results/v1 \
-#          --markdown ./test-evidence.md --provider-id junit || exit 1
         jf evd create --package-name quoteofday --package-version ${{ github.run_number }} --package-repo-name quotopia-proj-dev-docker --integration sonar
         if [ "$?" != "0" ]; then
             echo "WARN: Failed to create Sonar evidence."
         fi
       
-#    - name: Test Docker image
-#      run: |
-#        cd quoteofday
-#        # Pull the image for testing
-#        docker pull ${{ env.DOCKER_REGISTRY }}/quoteofday:${{ github.run_number }}
-#        
-#        # Run container with better debugging
-#        jf docker run -d --name test-container -p 8001:8001 ${{ env.DOCKER_REGISTRY }}/quoteofday:${{ github.run_number }}
-#        
-#        # Wait for container to start
-#        sleep 5
-#        
-#        # Test health endpoint
-#        curl -f http://localhost:8001/api/quotes/health || {
-#          echo "❌ Health check failed"
-#          exit 1
-#        } 
-
     - name: Publish buildinfo
       id: publish_build
       run: |
@@ -204,10 +162,3 @@ jobs:
         echo "build_name=quoteofday" >> $GITHUB_OUTPUT
         echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
 
-#  create_jira_evidence:
-#    needs: build-and-test
-#    uses: ./.github/workflows/create-jira-evidence.yml
-#    secrets: inherit
-#    with: 
-#      build_name: ${{ needs.build-and-test.outputs.build_name }}
-#      build_number: ${{ needs.build-and-test.outputs.build_number }}
