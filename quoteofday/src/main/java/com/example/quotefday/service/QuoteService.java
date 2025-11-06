@@ -69,9 +69,13 @@ public class QuoteService {
     public Quote getQuoteByAuthor(String name) {
         
         Quote quote = new Quote();
-        FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
         try {
+            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
             quote.setText(IOUtils.toString(inputStream));
+        } catch(java.io.FileNotFoundException) {
+            quote.setText("File not found");
+        } catch(java.io.IOException) {
+             quote.setText("Error opening file");
         } finally {
             inputStream.close();
         }
