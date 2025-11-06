@@ -78,8 +78,6 @@ public class QuoteService {
             quote.setText("Error opening file");
         } catch(Exception e) {
             quote.setText("Error");
-        } finally {
-            inputStream.close();
         }
         return quote;
     }
