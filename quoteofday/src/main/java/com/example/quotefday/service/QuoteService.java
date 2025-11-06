@@ -72,10 +72,12 @@ public class QuoteService {
         try {
             FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
             quote.setText(IOUtils.toString(inputStream));
-        } catch(java.io.FileNotFoundException) {
+        } catch(java.io.FileNotFoundException e) {
             quote.setText("File not found");
-        } catch(java.io.IOException) {
-             quote.setText("Error opening file");
+        } catch(java.io.IOException e) {
+            quote.setText("Error opening file");
+        } catch(Exception e) {
+            quote.setText("Error");
         } finally {
             inputStream.close();
         }
