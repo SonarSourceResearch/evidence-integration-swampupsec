@@ -69,7 +69,7 @@ public class QuoteService {
     }
 
     /* Sonar demo */
-    public Quote getQuoteByAuthor(String name) {
+    public Quote getQuoteByAuthorFile(String name) {
 
         Quote quote = new Quote();
         try {

@@ -168,7 +168,7 @@ public class QuoteController {
     public ResponseEntity<Quote> getQuoteByAuthor(
             @Parameter(description = "Name of the quote author", example = "Will Rogers")
             @RequestParam String name) {
-        Quote quote = quoteService.getQuoteByAuthor(name);
+        Quote quote = quoteService.getQuoteByAuthorFile(name);
         return ResponseEntity.ok(quote);
     }
 
