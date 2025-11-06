@@ -138,4 +138,38 @@ public class QuoteController {
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Quote of Day Service is running!");
     }
+    
+    /* Sonar demo */
+    @GetMapping("/author/{name}")
+    @Operation(
+        summary = "Get quote by author",
+        description = "Retrieves the inspirational quote from a specific author"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successfully retrieved quote for the specified author",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Quote.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid name format",
+            content = @Content
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Quote not found for the specified author",
+            content = @Content
+        )
+    })
+    public ResponseEntity<Quote> getQuoteByAuthor(
+            @Parameter(description = "Name of the quote author", example = "Will Rogers")
+            @PathVariable String name) {
+        Quote quote = quoteService.getQuoteByAuthor(name);
+        return ResponseEntity.ok(quote);
+    }
+
 }

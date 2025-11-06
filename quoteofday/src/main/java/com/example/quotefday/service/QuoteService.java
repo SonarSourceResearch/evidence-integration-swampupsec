@@ -6,9 +6,15 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.io.FileInputStream;
+import java.io.IOException;
+import org.apache.commons.io.IOUtils;
 
 @Service
 public class QuoteService {
+
+    static private String quoteDirectory = "/quotes/";
+
 
     private final List<Quote> quotes = Arrays.asList(
             new Quote("The only way to do great work is to love whats you do.", "Steve Jobs", LocalDate.now()),
@@ -56,6 +62,19 @@ public class QuoteService {
         int index = dayOfYear % quotes.size();
         Quote quote = quotes.get(index);
         quote.setDate(date);
+        return quote;
+    }
+
+    /* Sonar demo */
+    public Quote getQuoteByAuthor(String name) {
+        
+        Quote quote = new Quote();
+        FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
+        try {
+            quote.setText(IOUtils.toString(inputStream));
+        } finally {
+            inputStream.close();
+        }
         return quote;
     }
 
