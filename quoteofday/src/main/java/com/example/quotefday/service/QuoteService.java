@@ -9,12 +9,15 @@ import java.util.List;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.commons.io.IOUtils;
+/*
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+*/
 
 @Service
 public class QuoteService {
 
-    static private String quoteDirectory = "/quotes/";
-
+    private static String quoteDirectory = "/quotes/";
 
     private final List<Quote> quotes = Arrays.asList(
             new Quote("The only way to do great work is to love whats you do.", "Steve Jobs", LocalDate.now()),
@@ -67,7 +70,7 @@ public class QuoteService {
 
     /* Sonar demo */
     public Quote getQuoteByAuthor(String name) {
-        
+
         Quote quote = new Quote();
         try {
             FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
@@ -79,6 +82,13 @@ public class QuoteService {
         } catch(Exception e) {
             quote.setText("Error");
         }
+        return quote;
+    }
+
+    public Quote getQuotesFromXML() {
+        Quote quote = new Quote();
+      
+
         return quote;
     }
 
