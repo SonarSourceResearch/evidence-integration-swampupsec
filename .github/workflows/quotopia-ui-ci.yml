@@ -43,7 +43,7 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
-        projectBaseDir: quotopia-ui/
+        projectBaseDir: quotopia/
         args: >
           -Dsonar.organization=${{ vars.SONAR_ORG }}
           -Dsonar.projectKey=${{ vars.SONAR_PROJ }}
