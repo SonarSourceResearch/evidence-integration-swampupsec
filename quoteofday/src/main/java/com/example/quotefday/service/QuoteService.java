@@ -11,9 +11,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
+import com.google.genai.Chat;
 import com.google.genai.Client;
+import com.google.genai.types.Content;
+import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
-
+import com.google.genai.types.GenerationConfig;
+import com.google.genai.types.GoogleSearch;
+import com.google.genai.types.HarmBlockThreshold;
+import com.google.genai.types.HarmCategory;
+import com.google.genai.types.Part;
+import com.google.genai.types.SafetySetting;
+import com.google.genai.types.Tool;
 
 
 @Service
@@ -22,12 +31,24 @@ public class QuoteService {
     private static String quoteDirectory = "/quotes/";
     private static String apiKey = "mysecret-api-1231523234";
 
-    private String testClientConnection() {
+    private void testClientConnection() {
         Client client = Client.builder().apiKey("YOUR_API_KEY").build();
-       
+        String systemPrompt = "Generate an inspirational quote about the following topic: " + "german cars";
+        Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
+        Tool googleSearchTool = Tool.builder().googleSearch(GoogleSearch.builder().build()).build();
+
+        GenerateContentConfig config = GenerateContentConfig.builder()
+            .candidateCount(1)
+              .maxOutputTokens(1024)
+              .systemInstruction(systemInstruction)
+              .tools(List.of(googleSearchTool))
+              .build();
+
         GenerateContentResponse response = client.models
-                .generateContent("gemini-2.0-flash-001", "test", null);
-        return response.text();
+        .generateContent("gemini-2.0-flash-001", "test", config);
+
+        String aiGeneratedQuote = response.text();
+
     }
 
     private final List<Quote> quotes = Arrays.asList(
@@ -98,15 +119,10 @@ public class QuoteService {
     public Quote getQuoteFromAI(String prompt) {
         
         Quote quote = new Quote();
-        // Create new client and generate content with prompt for a quote
-        Client client = Client.builder().apiKey(apiKey).build();
-        GenerateContentResponse response = client.models
-                .generateContent("gemini-2.0-flash-001", prompt, null);
+        // Create new client and generate content with system prompt for a specific topic
 
-        quote.setText(response.text());
-        quote.setAuthor("AI Generated");
-        quote.setDate(LocalDate.now());
 
+        
         return quote;
     }
 
