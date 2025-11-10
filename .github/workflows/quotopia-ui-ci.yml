@@ -37,6 +37,21 @@ jobs:
         JF_USER: ${{ vars.JF_USER }}
         JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v6
+      continue-on-error: true  # Don't fail build on SonarCloud quality gate issues
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        projectBaseDir: quotopia-ui/
+        args: >
+          -Dsonar.organization=${{ vars.SONAR_ORG }}
+          -Dsonar.projectKey=${{ vars.SONAR_PROJ }}
+          -Dsonar.sources=.
+          -Dsonar.javascript.file.suffixes=.js
+          -Dsonar.exclusions=**/node_modules/**,**/*.png,**/*.svg
+          -Dsonar.qualitygate.wait=false
+      
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       
@@ -80,6 +95,17 @@ jobs:
           echo "❌ Index.html check failed"
           exit 1
         }
+
+    - name: Evidence on docker image
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        set +e
+        echo "🔍 Creating Sonar evidence on docker image..."
+        jf evd create --package-name quotopia-ui --package-version ${{ github.run_number }} --package-repo-name quotopia-proj-dev-docker --integration sonar
+        if [ "$?" != "0" ]; then
+            echo "WARN: Failed to create Sonar evidence."
+        fi
 
     - name: Publish buildinfo
       id: publish_build
