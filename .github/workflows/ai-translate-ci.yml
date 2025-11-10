@@ -94,10 +94,9 @@ jobs:
     - name: Build and Push Docker image
       run: |
         cd translate
-        # Build single platform AMD64 image
+        # Build single platform AMD64 image (JFrog Artifactory has issues with manifest lists)
         jf docker buildx build --platform linux/amd64 \
-          --cache-from type=registry,ref=${{ env.DOCKER_REGISTRY }}/ai-translate:cache \
-          --cache-to type=registry,ref=${{ env.DOCKER_REGISTRY }}/ai-translate:cache,mode=max \
+          --provenance=false --sbom=false \
           --tag ${{ env.DOCKER_REGISTRY }}/ai-translate:${{ github.run_number }} \
           --metadata-file=build-metadata --output=type=image --push .
         jf rt build-docker-create quotopia-proj-dev-docker  \
