@@ -31,6 +31,14 @@ public class QuoteService {
     private static String quoteDirectory = "/quotes/";
     private static String apiKey = "mysecret-api-1231523234";
 
+    private String testClientConnection() {
+        Client client = Client.builder().apiKey("YOUR_API_KEY").build();
+       
+        GenerateContentResponse response = client.models
+                .generateContent("gemini-2.0-flash-001", prompt, null);
+        return response.text();
+    }
+
     private final List<Quote> quotes = Arrays.asList(
             new Quote("The only way to do great work is to love whats you do.", "Steve Jobs", LocalDate.now()),
             new Quote("Life is what happens when you're busy making other plans.", "John Lennon", LocalDate.now()),
@@ -99,8 +107,14 @@ public class QuoteService {
     public Quote getQuoteFromAI(String prompt) {
         
         Quote quote = new Quote();
-        // Connect to Google GenAI client and prompt for quote
-        
+        // Create new client and generate content with prompt for a quote
+        Client client = Client.builder().apiKey(apiKey).build();
+        GenerateContentResponse response = client.models
+                .generateContent("gemini-2.0-flash-001", prompt, null);
+
+        quote.setText(response.text());
+        quote.setAuthor("AI Generated");
+        quote.setDate(LocalDate.now());
 
         return quote;
     }
