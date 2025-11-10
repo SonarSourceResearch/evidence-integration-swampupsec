@@ -6,14 +6,30 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import org.apache.commons.io.IOUtils;
+import com.google.genai.Chat;
+import com.google.genai.Client;
+import com.google.genai.types.Content;
+import com.google.genai.types.GenerateContentConfig;
+import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.GenerationConfig;
+import com.google.genai.types.GoogleSearch;
+import com.google.genai.types.HarmBlockThreshold;
+import com.google.genai.types.HarmCategory;
+import com.google.genai.types.Part;
+import com.google.genai.types.SafetySetting;
+import com.google.genai.types.Tool;
+
 
 @Service
 public class QuoteService {
 
     private static String quoteDirectory = "/quotes/";
+    private static String apiKey = "mysecret-api-1231523234";
 
     private final List<Quote> quotes = Arrays.asList(
             new Quote("The only way to do great work is to love whats you do.", "Steve Jobs", LocalDate.now()),
@@ -64,8 +80,7 @@ public class QuoteService {
         return quote;
     }
 
-    /* Sonar demo */
-    public Quote getQuoteByAuthorFile(String name) {
+    public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
@@ -81,8 +96,13 @@ public class QuoteService {
         return quote;
     }
 
-    public Quote getQuotesFromXML() {
-        return new Quote();
+    public Quote getQuoteFromAI(String prompt) {
+        
+        Quote quote = new Quote();
+        // Connect to Google GenAI client and prompt for quote
+        
+
+        return quote;
     }
 
     public List<Quote> getAllQuotes() {
