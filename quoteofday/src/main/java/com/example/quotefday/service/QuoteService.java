@@ -11,18 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import com.google.genai.Chat;
 import com.google.genai.Client;
-import com.google.genai.types.Content;
-import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.GenerationConfig;
-import com.google.genai.types.GoogleSearch;
-import com.google.genai.types.HarmBlockThreshold;
-import com.google.genai.types.HarmCategory;
-import com.google.genai.types.Part;
-import com.google.genai.types.SafetySetting;
-import com.google.genai.types.Tool;
+
 
 
 @Service
@@ -35,7 +26,7 @@ public class QuoteService {
         Client client = Client.builder().apiKey("YOUR_API_KEY").build();
        
         GenerateContentResponse response = client.models
-                .generateContent("gemini-2.0-flash-001", prompt, null);
+                .generateContent("gemini-2.0-flash-001", "test", null);
         return response.text();
     }
 
