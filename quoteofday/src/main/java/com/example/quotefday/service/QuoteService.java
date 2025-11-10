@@ -87,7 +87,7 @@ public class QuoteService {
 
     public Quote getQuotesFromXML() {
         Quote quote = new Quote();
-      
+             
 
         return quote;
     }
