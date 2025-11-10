@@ -120,21 +120,6 @@ public class QuoteService {
         
         Quote quote = new Quote();
         // Create new client and generate content with system prompt for a specific topic
-        Client client = Client.builder().apiKey(apiKey).build();
-        String systemPrompt = "Generate an inspirational quote about the following topic: " + topic;
-        Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
-        GenerateContentConfig config = GenerateContentConfig.builder()
-            .candidateCount(1)
-              .maxOutputTokens(1024)
-              .systemInstruction(systemInstruction)
-              .build();
-        GenerateContentResponse response = client.models
-        .generateContent("gemini-2.0-flash-001", "quote-generation", config);
-        String aiGeneratedQuote = response.text();
-        quote.setText(aiGeneratedQuote);
-        quote.setAuthor("AI");
-        quote.setDate(LocalDate.now());
-
        
 
         return quote;
