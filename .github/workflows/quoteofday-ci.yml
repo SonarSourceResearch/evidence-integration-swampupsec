@@ -68,41 +68,40 @@ jobs:
       run: |
         jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases quotopia-proj-dev-maven-virt --repo-resolve-snapshots quotopia-proj-dev-maven-virt --repo-deploy-releases quotopia-proj-dev-maven-virt --repo-deploy-snapshots quotopia-proj-dev-maven-virt
       
-#    - name: Build and Deploy to Artifactory
-#      run: |
-#        cd quoteofday
-#        # Replace SNAPSHOT with GitHub run number for versioning
-#        sed -i "s/-SNAPSHOT/-${{ github.run_number }}/g" pom.xml
-#        echo "📦 Updated version to 1.0.0-${{ github.run_number }}"
-#        
-        # Build and deploy to Artifactory
-#        jf mvn deploy -Dscan=false -q --batch-mode --no-transfer-progress --build-name quoteofday --build-number ${{ github.run_number }}
+    - name: Build and Deploy to Artifactory
+      run: |
+        cd quoteofday
+        # Replace SNAPSHOT with GitHub run number for versioning
+        sed -i "s/-SNAPSHOT/-${{ github.run_number }}/g" pom.xml
+        echo "📦 Updated version to 1.0.0-${{ github.run_number }}"
         
-#    - name: Get artifact SHA256
-#      id: get_sha256
-#      run: |
-#        ARTIFACT_PATH="com/example/quote-of-day-service/1.0.0-${{ github.run_number }}/quote-of-day-service-1.0.0-${{ github.run_number }}.jar"
-#        JF_URL=${{ vars.JF_URL }}
-#        REPO_KEY="quotopia-proj-dev-maven-virt"
-#        API_ENDPOINT="${JF_URL}/artifactory/api/storage/${REPO_KEY}/${ARTIFACT_PATH}"
-#        JF_USER=${{ vars.JF_USER }}
-#        JF_ACCESS_TOKEN=${{ secrets.JF_ACCESS_TOKEN }}
+        # Build and deploy to Artifactory
+        jf mvn deploy -Dscan=false -q --batch-mode --no-transfer-progress --build-name quoteofday --build-number ${{ github.run_number }}
+        
+    - name: Get artifact SHA256
+      id: get_sha256
+      run: |
+        ARTIFACT_PATH="com/example/quote-of-day-service/1.0.0-${{ github.run_number }}/quote-of-day-service-1.0.0-${{ github.run_number }}.jar"
+        JF_URL=${{ vars.JF_URL }}
+        REPO_KEY="quotopia-proj-dev-maven-virt"
+        API_ENDPOINT="${JF_URL}/artifactory/api/storage/${REPO_KEY}/${ARTIFACT_PATH}"
+        JF_USER=${{ vars.JF_USER }}
+        JF_ACCESS_TOKEN=${{ secrets.JF_ACCESS_TOKEN }}
 
-#        echo "Fetching artifact info from: ${API_ENDPOINT}"
+        echo "Fetching artifact info from: ${API_ENDPOINT}"
 
-#        response=$(curl -s -u "${JF_USER}:${JF_ACCESS_TOKEN}" "${API_ENDPOINT}")
-#        echo "API Response: ${response}"
+        response=$(curl -s -u "${JF_USER}:${JF_ACCESS_TOKEN}" "${API_ENDPOINT}")
+        echo "API Response: ${response}"
 
-#        SHA256=$(echo "${response}" | jq -r '.checksums.sha256')
+        SHA256=$(echo "${response}" | jq -r '.checksums.sha256')
 
-#        if [[ -z "$SHA256" || "$SHA256" == "null" ]]; then
-#          echo "Error: Could not retrieve SHA256 checksum."
-#          exit 1
-#        fi
+        if [[ -z "$SHA256" || "$SHA256" == "null" ]]; then
+          echo "Error: Could not retrieve SHA256 checksum."
+          exit 1
+        fi
 
-#       echo "Retrieved SHA256: ${SHA256}"
-#       echo "sha256=${SHA256}" >> $GITHUB_OUTPUT
-
+       echo "Retrieved SHA256: ${SHA256}"
+       echo "sha256=${SHA256}" >> $GITHUB_OUTPUT
 
     - name: Mvn Build with Sonar Scan
       continue-on-error: true  # Don't fail build on SonarCloud quality gate issues
