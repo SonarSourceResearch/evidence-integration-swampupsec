@@ -103,6 +103,7 @@ jobs:
       run: |
         set +e
         echo "🔍 Creating Sonar evidence on docker image..."
+        cd quotopia-ui
         jf evd create --package-name quotopia-ui --package-version ${{ github.run_number }} --package-repo-name quotopia-proj-dev-docker --integration sonar
         if [ "$?" != "0" ]; then
             echo "WARN: Failed to create Sonar evidence."
@@ -116,10 +117,4 @@ jobs:
         echo "build_name=quotopia-ui" >> $GITHUB_OUTPUT
         echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
 
-  create_jira_evidence:
-    needs: build-and-deploy
-    uses: ./.github/workflows/create-jira-evidence.yml
-    secrets: inherit
-    with: 
-      build_name: ${{ needs.build-and-deploy.outputs.build_name }}
-      build_number: ${{ needs.build-and-deploy.outputs.build_number }}
+  
