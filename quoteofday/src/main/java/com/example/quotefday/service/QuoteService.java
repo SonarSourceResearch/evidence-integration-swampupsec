@@ -120,6 +120,7 @@ public class QuoteService {
         
         Quote quote = new Quote();
         // Create new client and generate content with system prompt for a specific topic
+
        
 
         return quote;

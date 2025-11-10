@@ -138,7 +138,6 @@ public class QuoteController {
         return ResponseEntity.ok("Quote of Day Service is running!");
     }
     
-    /* Sonar demo */
     @Operation(
         summary = "Get quote by author",
         description = "Retrieves the inspirational quote from a specific author"
