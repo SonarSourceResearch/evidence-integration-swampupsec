@@ -139,7 +139,7 @@ public class QuoteController {
         return ResponseEntity.ok("Quote of Day Service is running!");
     }
     
-    /* Sonar demo */
+    /* Sonar demo test */
     @GetMapping("/author/{name}")
     @Operation(
         summary = "Get quote by author",
