@@ -65,8 +65,8 @@ jobs:
     - name: Build and Push Docker image
       run: |
         cd quotopia-ui
-        # Build and push to JFrog Artifactory
-        jf docker buildx build --platform linux/amd64,linux/arm64 \
+        # Build single platform AMD64 image
+        jf docker buildx build --platform linux/amd64 \
           --tag ${{ env.DOCKER_REGISTRY }}/quotopia-ui:${{ github.run_number }} \
           --metadata-file=build-metadata --output=type=image --push .
         jf rt build-docker-create quotopia-proj-dev-docker  \
