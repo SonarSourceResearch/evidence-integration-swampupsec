@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/quotes")
-@CrossOrigin(origins = "*")
 @Tag(name = "Quote of Day", description = "Quote of Day management APIs")
 public class QuoteController {
 
