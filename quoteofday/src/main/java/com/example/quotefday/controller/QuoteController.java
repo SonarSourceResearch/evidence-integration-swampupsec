@@ -140,7 +140,6 @@ public class QuoteController {
     }
     
     /* Sonar demo */
-    @GetMapping("/author/{name}")
     @Operation(
         summary = "Get quote by author",
         description = "Retrieves the inspirational quote from a specific author"

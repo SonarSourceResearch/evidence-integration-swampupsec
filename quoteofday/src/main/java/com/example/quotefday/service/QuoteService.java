@@ -9,10 +9,6 @@ import java.util.List;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.commons.io.IOUtils;
-/*
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-*/
 
 @Service
 public class QuoteService {
@@ -86,10 +82,7 @@ public class QuoteService {
     }
 
     public Quote getQuotesFromXML() {
-        Quote quote = new Quote();
-             
-
-        return quote;
+        return new Quote();
     }
 
     public List<Quote> getAllQuotes() {
