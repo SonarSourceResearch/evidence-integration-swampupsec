@@ -1,0 +1,24 @@
+{
+  "version": "31",
+  "sources": {
+    "builds": [
+      {
+        "name": "quoteofday",
+        "number": "25",
+        "include_dependencies": false
+      },
+      {
+        "name": "quotopia-ui",
+        "number": "6",
+        "include_dependencies": false
+      },
+      {
+        "name": "ai-translate",
+        "number": "1",
+        "include_dependencies": false
+      }
+    ]
+  }
+}
+
+

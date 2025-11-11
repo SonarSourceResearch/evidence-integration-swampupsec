@@ -78,6 +78,6 @@ jobs:
           ]}}"
           echo "REQUEST_BODY=$REQUEST_BODY"
 
-          curl -X POST -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" -d @create_app_no_sonar_evid.json  '$JF_URL/apptrust/api/v1/applications/quotopia-app/versions?async=false'
+          curl -X POST -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" -d @create_app_no_sonar_evid.jfrog_req '$JF_URL/apptrust/api/v1/applications/quotopia-app/versions?async=false'
 
 
