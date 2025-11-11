@@ -65,6 +65,7 @@ jobs:
 
       - name: Create Application Version With Sonar Evidence
         run: |
+          set +e
           echo "APP_ID=$APP_ID"
           LATEST_VER="${{ steps.get_app_ver.outputs.app_ver }}"
           NEXT_VER=$((LATEST_VER + 1))
@@ -78,6 +79,6 @@ jobs:
           ]}}"
           echo "REQUEST_BODY=$REQUEST_BODY"
 
-          curl -X POST -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" -d @create_app_no_sonar_evid.jfrog_req "$JF_URL/apptrust/api/v1/applications/quotopia-app/versions?async=false"
+          curl -X POST -H "Authorization: Bearer ${{ secrets.JF_ACCESS_TOKEN }}" -d "$REQUEST_BODY" "$JF_URL/apptrust/api/v1/applications/quotopia-app/versions?async=false"
 
 
