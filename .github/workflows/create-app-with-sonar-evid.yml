@@ -65,7 +65,6 @@ jobs:
 
       - name: Create Application Version With Sonar Evidence
         run: |
-          set +e
           echo "APP_ID=$APP_ID"
           LATEST_VER="${{ steps.get_app_ver.outputs.app_ver }}"
           NEXT_VER=$((LATEST_VER + 1))
