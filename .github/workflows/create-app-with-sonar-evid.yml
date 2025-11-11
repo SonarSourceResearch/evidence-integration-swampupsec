@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-     - name: Get latest application version
+      - name: Get latest application version
         id: get_app_ver
         run: |
           # Define a temporary file to store the API response body
