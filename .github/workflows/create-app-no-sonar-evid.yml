@@ -1,4 +1,4 @@
-name: Create Application Version With Sonar Evidence
+name: Create Application Version no sonar evidence
 
 
 on:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   create-app-ver-with-sonar-evidence:
-    name: Create Application Version With Sonar Evidence
+    name: Create Application Version no sonar evidence
     runs-on: ubuntu-latest
     env:
       JF_URL: ${{ vars.JF_URL }}
@@ -63,7 +63,7 @@ jobs:
 
           echo "app_ver=$LATEST_VER" >> $GITHUB_OUTPUT
 
-      - name: Create Application Version With Sonar Evidence
+      - name: Create Application Version no sonar evidence
         run: |
           echo "APP_ID=$APP_ID"
           LATEST_VER="${{ steps.get_app_ver.outputs.app_ver }}"
