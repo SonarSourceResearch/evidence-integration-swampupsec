@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import com.google.genai.Chat;
@@ -106,21 +104,10 @@ public class QuoteService {
 
         Quote quote = new Quote();
         try {
-            // Validate and sanitize the file path to prevent path injection
-            Path basePath = Paths.get(quoteDirectory).toAbsolutePath().normalize();
-            Path requestedPath = basePath.resolve(name).normalize();
-            
-            // Ensure the resolved path is within the base directory
-            if (!requestedPath.startsWith(basePath)) {
-                throw new SecurityException("Invalid file path");
-            }
-            
-            FileInputStream inputStream = new FileInputStream(requestedPath.toFile());
+            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
             quote.setText(IOUtils.toString(inputStream));
         } catch(java.io.FileNotFoundException e) {
             quote.setText("File not found");
-        } catch(SecurityException e) {
-            quote.setText("Invalid file path");
         } catch(java.io.IOException e) {
             quote.setText("Error opening file");
         } catch(Exception e) {
@@ -133,7 +120,7 @@ public class QuoteService {
         
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
-       
+        
         
 
         return quote;
