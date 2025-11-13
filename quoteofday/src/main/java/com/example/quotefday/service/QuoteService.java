@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import com.google.genai.Chat;
@@ -100,12 +102,23 @@ public class QuoteService {
         return quote;
     }
 
-    public Quote getQuoteByAuthor(String name) {
+public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
-            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
+            // Validate and sanitize the file path to prevent path injection
+            Path basePath = Paths.get(quoteDirectory).normalize().toAbsolutePath();
+            Path requestedPath = basePath.resolve(name).normalize().toAbsolutePath();
+            
+            // Ensure the resolved path is within the base directory
+            if (!requestedPath.startsWith(basePath)) {
+                throw new SecurityException("Invalid file path");
+            }
+            
+            FileInputStream inputStream = new FileInputStream(requestedPath.toFile());
             quote.setText(IOUtils.toString(inputStream));
+        } catch(SecurityException e) {
+            quote.setText("Invalid file path");
         } catch(java.io.FileNotFoundException e) {
             quote.setText("File not found");
         } catch(java.io.IOException e) {
@@ -120,21 +133,6 @@ public class QuoteService {
         
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
-        Client client = Client.builder().apiKey(apiKey).build();
-        String systemPrompt = "Generate an inspirational quote about the following topic: " + topic;
-        Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
-        GenerateContentConfig config = GenerateContentConfig.builder()
-            .candidateCount(1)
-              .maxOutputTokens(1024)
-              .systemInstruction(systemInstruction)
-              .build();
-        GenerateContentResponse response = client.models
-        .generateContent("gemini-2.0-flash-001", "quote-generation", config);
-        String aiGeneratedQuote = response.text();
-        quote.setText(aiGeneratedQuote);
-        quote.setAuthor("AI Generated");
-        quote.setDate(LocalDate.now());
-
         
         
 
