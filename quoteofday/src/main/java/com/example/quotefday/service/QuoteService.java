@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import com.google.genai.Chat;
@@ -106,16 +104,7 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
-            // Validate and sanitize the file path to prevent path injection
-            Path basePath = Paths.get(quoteDirectory).normalize().toAbsolutePath();
-            Path requestedPath = basePath.resolve(name).normalize().toAbsolutePath();
-            
-            // Ensure the resolved path is within the base directory
-            if (!requestedPath.startsWith(basePath)) {
-                throw new SecurityException("Invalid file path");
-            }
-            
-            FileInputStream inputStream = new FileInputStream(requestedPath.toFile());
+            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
             quote.setText(IOUtils.toString(inputStream));
         } catch(SecurityException e) {
             quote.setText("Invalid file path");
