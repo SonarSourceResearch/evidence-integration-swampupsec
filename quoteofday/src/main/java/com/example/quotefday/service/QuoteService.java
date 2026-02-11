@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import com.google.genai.Chat;
@@ -104,7 +106,18 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
-            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
+            // Validate and sanitize the file name to prevent path injection
+            if (name == null || name.contains("../") || name.contains("..\\") || name.contains("/") || name.contains("\\")) {
+                quote.setText("Invalid file name");
+                return quote;
+            }
+            Path basePath = Paths.get(quoteDirectory).normalize();
+            Path filePath = basePath.resolve(name).normalize();
+            if (!filePath.startsWith(basePath)) {
+                quote.setText("Invalid file path");
+                return quote;
+            }
+            FileInputStream inputStream = new FileInputStream(filePath.toFile());
             quote.setText(IOUtils.toString(inputStream));
         } catch(SecurityException e) {
             quote.setText("Invalid file path");
@@ -122,24 +135,7 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
-            Client client = Client.builder().apiKey(apiKey).build();
-            String systemPrompt = "Generate an inspirational quote about the following topic: " + topic;
-            Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
-            Tool googleSearchTool = Tool.builder().googleSearch(GoogleSearch.builder().build()).build();
-                    
-            GenerateContentConfig config = GenerateContentConfig.builder()
-                .candidateCount(1)
-                .maxOutputTokens(1024)
-                .systemInstruction(systemInstruction)
-                .tools(List.of(googleSearchTool))
-                .build();
-            GenerateContentResponse response = client.models
-                .generateContent("gemini-2.0-flash-001", "test", config);
-            String aiGeneratedQuote = response.text();
-            quote.setText(aiGeneratedQuote);
-
-
-        
+          
 
 
 
