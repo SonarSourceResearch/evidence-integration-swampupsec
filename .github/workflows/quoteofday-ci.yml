@@ -64,10 +64,10 @@ jobs:
 #        JF_USER: ${{ vars.JF_USER }}
 #        JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
 #
-    - name: Setup Maven
-      run: |
-        jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases quotopia-proj-dev-maven-virt --repo-resolve-snapshots quotopia-proj-dev-maven-virt --repo-deploy-releases quotopia-proj-dev-maven-virt --repo-deploy-snapshots quotopia-proj-dev-maven-virt
-      
+#    - name: Setup Maven
+#      run: |
+#        jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases quotopia-proj-dev-maven-virt --repo-resolve-snapshots quotopia-proj-dev-maven-virt --repo-deploy-releases quotopia-proj-dev-maven-virt --repo-deploy-snapshots quotopia-proj-dev-maven-virt
+#      
 #    - name: Build and Deploy to Artifactory
 #      run: |
 #        cd quoteofday
