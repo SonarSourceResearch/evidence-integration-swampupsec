@@ -122,11 +122,25 @@ public Quote getQuoteByAuthor(String name) {
 
     public Quote getQuoteFromAI(String topic) {
 
+        String apiKey = System.getenv("GENAI_API_KEY");
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
+            Client client = Client.builder().apiKey(apiKey).build();
+            String systemPrompt = "Generate an inspirational quote about the following topic: " + topic;
+            Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
+            Tool googleSearchTool = Tool.builder().googleSearch(GoogleSearch.builder().build()).build();
 
-
-
+            GenerateContentConfig config = GenerateContentConfig.builder()
+                .candidateCount(1)
+                .maxOutputTokens(1024)
+                .systemInstruction(systemInstruction)
+                .tools(List.of(googleSearchTool))
+                .build();
+            GenerateContentResponse response = client.models
+                .generateContent("gemini-2.0-flash-001", "test", config);
+            String aiGeneratedQuote = response.text();
+            quote.setText(aiGeneratedQuote);
+            
         return quote;
     }
 
