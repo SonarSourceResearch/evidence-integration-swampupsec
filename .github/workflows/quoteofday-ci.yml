@@ -54,16 +54,16 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('quoteofday/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Setup JFrog CLI
-      uses: jfrog/setup-jfrog-cli@v4
-      with:
-        version: latest
-        custom-server-id: evidence-demo
-      env:
-        JF_URL: ${{ vars.JF_URL }}
-        JF_USER: ${{ vars.JF_USER }}
-        JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-
+#    - name: Setup JFrog CLI
+#      uses: jfrog/setup-jfrog-cli@v4
+#      with:
+#        version: latest
+#        custom-server-id: evidence-demo
+#      env:
+#        JF_URL: ${{ vars.JF_URL }}
+#        JF_USER: ${{ vars.JF_USER }}
+#        JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+#
     - name: Setup Maven
       run: |
         jf mvnc --server-id-resolve evidence-demo --server-id-deploy evidence-demo --repo-resolve-releases quotopia-proj-dev-maven-virt --repo-resolve-snapshots quotopia-proj-dev-maven-virt --repo-deploy-releases quotopia-proj-dev-maven-virt --repo-deploy-snapshots quotopia-proj-dev-maven-virt
@@ -118,43 +118,43 @@ jobs:
         -Dsonar.sca.enabled=false
         -Dsonar.exclusions=**/*.sh,**/*.xml,**/*.yml,**/*.yaml*,**/*.py,**/*.go,**/*.css,**/*.js,**/argocd/*,**/e2e-tests/*,**/jira/*,**/quotopia-ui/*,**/translate/*
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Login to Docker Registry
-      run: |
-        echo "🔐 Logging into JFrog Artifactory Docker registry..."
-        echo "Registry: ${{ env.DOCKER_REGISTRY }}"
-        echo ${{ secrets.JF_ACCESS_TOKEN }} | docker login -u ${{ vars.JF_USER }} --password-stdin ${{ env.DOCKER_REGISTRY }}
-        echo "✅ Successfully logged into Docker registry"
-      
-    - name: Build and Push Docker image
-      run: |
-        cd quoteofday
-        # Build and push to JFrog Artifactory
-        jf docker buildx build --platform linux/amd64,linux/arm64 \
-          --tag ${{ env.DOCKER_REGISTRY }}/quoteofday:${{ github.run_number }} \
-          --metadata-file=build-metadata --output=type=image --push .
-        jf rt build-docker-create quotopia-proj-dev-docker  \
-          --image-file build-metadata --build-name quoteofday --build-number ${{ github.run_number }} 
-
-    - name: Evidence on docker image
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        set +e
-        echo "🔍 Creating evidence on docker image..."
-        cd quoteofday || exit 1
-        jf evd create --package-name quoteofday --package-version ${{ github.run_number }} --package-repo-name quotopia-proj-dev-docker --integration sonar
-        if [ "$?" != "0" ]; then
-            echo "WARN: Failed to create Sonar evidence."
-        fi
-      
-    - name: Publish buildinfo
-      id: publish_build
-      run: |
-        jf rt build-add-git quoteofday ${{ github.run_number }}
-        jf rt build-publish quoteofday ${{ github.run_number }}
-        echo "build_name=quoteofday" >> $GITHUB_OUTPUT
-        echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v3
+#      
+#    - name: Login to Docker Registry
+#      run: |
+#        echo "🔐 Logging into JFrog Artifactory Docker registry..."
+#        echo "Registry: ${{ env.DOCKER_REGISTRY }}"
+#        echo ${{ secrets.JF_ACCESS_TOKEN }} | docker login -u ${{ vars.JF_USER }} --password-stdin ${{ env.DOCKER_REGISTRY }}
+#        echo "✅ Successfully logged into Docker registry"
+#      
+#    - name: Build and Push Docker image
+#      run: |
+#        cd quoteofday
+#        # Build and push to JFrog Artifactory
+#        jf docker buildx build --platform linux/amd64,linux/arm64 \
+#          --tag ${{ env.DOCKER_REGISTRY }}/quoteofday:${{ github.run_number }} \
+#          --metadata-file=build-metadata --output=type=image --push .
+#        jf rt build-docker-create quotopia-proj-dev-docker  \
+#          --image-file build-metadata --build-name quoteofday --build-number ${{ github.run_number }} 
+#
+#    - name: Evidence on docker image
+#      env:
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      run: |
+#        set +e
+#        echo "🔍 Creating evidence on docker image..."
+#        cd quoteofday || exit 1
+#        jf evd create --package-name quoteofday --package-version ${{ github.run_number }} --package-repo-name quotopia-proj-dev-docker --integration sonar
+#        if [ "$?" != "0" ]; then
+#            echo "WARN: Failed to create Sonar evidence."
+#        fi
+#      
+#    - name: Publish buildinfo
+#      id: publish_build
+#      run: |
+#        jf rt build-add-git quoteofday ${{ github.run_number }}
+#        jf rt build-publish quoteofday ${{ github.run_number }}
+#        echo "build_name=quoteofday" >> $GITHUB_OUTPUT
+#        echo "build_number=${{ github.run_number }}" >> $GITHUB_OUTPUT
 
