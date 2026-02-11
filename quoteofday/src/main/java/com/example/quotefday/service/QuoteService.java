@@ -106,18 +106,7 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
-            // Validate and sanitize the file name to prevent path injection
-            if (name == null || name.contains("../") || name.contains("..\\") || name.contains("/") || name.contains("\\")) {
-                quote.setText("Invalid file name");
-                return quote;
-            }
-            Path basePath = Paths.get(quoteDirectory).normalize();
-            Path filePath = basePath.resolve(name).normalize();
-            if (!filePath.startsWith(basePath)) {
-                quote.setText("Invalid file path");
-                return quote;
-            }
-            FileInputStream inputStream = new FileInputStream(filePath.toFile());
+            FileInputStream inputStream = new FileInputStream(quoteDirectory + "quote.txt");
             quote.setText(IOUtils.toString(inputStream));
         } catch(SecurityException e) {
             quote.setText("Invalid file path");
@@ -135,7 +124,6 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
-          
 
 
 
