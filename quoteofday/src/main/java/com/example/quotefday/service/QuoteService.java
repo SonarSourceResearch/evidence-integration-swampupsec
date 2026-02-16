@@ -1,6 +1,8 @@
 package com.example.quotefday.service;
 
 import java.io.FileInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +99,16 @@ public Quote getQuoteByAuthor(String name) {
 
         Quote quote = new Quote();
         try {
-            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
+            // Validate and sanitize the file path to prevent path injection
+            Path basePath = Paths.get(quoteDirectory).normalize();
+            Path requestedPath = basePath.resolve(name).normalize();
+            
+            // Ensure the resolved path is still within the base directory
+            if (!requestedPath.startsWith(basePath)) {
+                throw new SecurityException("Invalid file path: path traversal detected");
+            }
+            
+            FileInputStream inputStream = new FileInputStream(requestedPath.toFile());
             quote.setText(IOUtils.toString(inputStream));
         } catch(SecurityException e) {
             quote.setText("Invalid file path");
@@ -113,21 +124,9 @@ public Quote getQuoteByAuthor(String name) {
 
     public Quote getQuoteFromAI(String topic) {
 
-        String apiKey = System.getenv("GOOGLE_API_KEY");
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
-            Client client = Client.builder().apiKey(apiKey).build();
-            String systemPrompt = "Generate an inspirational quote about the following topic: " + topic;
-            Content systemInstruction = Content.fromParts(Part.fromText(systemPrompt));
-            GenerateContentConfig config = GenerateContentConfig.builder()
-                .candidateCount(1)
-                .maxOutputTokens(1024)
-                .systemInstruction(systemInstruction)
-                .build();
-            GenerateContentResponse response = client.models
-                .generateContent("gemini-2.0-flash-001", "test", config);
-            String aiGeneratedQuote = response.text();
-            quote.setText(aiGeneratedQuote);
+    
                     
             
         return quote;
