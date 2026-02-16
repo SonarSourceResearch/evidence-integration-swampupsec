@@ -1,29 +1,20 @@
 package com.example.quotefday.service;
 
-import com.example.quotefday.model.Quote;
-import org.springframework.stereotype.Service;
-
+import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
-import com.google.genai.Chat;
+import org.springframework.stereotype.Service;
+
+import com.example.quotefday.model.Quote;
 import com.google.genai.Client;
 import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.GenerationConfig;
 import com.google.genai.types.GoogleSearch;
-import com.google.genai.types.HarmBlockThreshold;
-import com.google.genai.types.HarmCategory;
 import com.google.genai.types.Part;
-import com.google.genai.types.SafetySetting;
 import com.google.genai.types.Tool;
 
 
@@ -125,7 +116,6 @@ public Quote getQuoteByAuthor(String name) {
         Quote quote = new Quote();
         // Create new client and generate content with prompt for a specific topic
         
-                   
             
         return quote;
     }
