@@ -96,22 +96,11 @@ public class QuoteService {
     }
 
 public Quote getQuoteByAuthor(String name) {
-
+    
         Quote quote = new Quote();
         try {
-            // Validate and sanitize the file path to prevent path injection
-            Path basePath = Paths.get(quoteDirectory).normalize();
-            Path requestedPath = basePath.resolve(name).normalize();
-            
-            // Ensure the resolved path is still within the base directory
-            if (!requestedPath.startsWith(basePath)) {
-                throw new SecurityException("Invalid file path: path traversal detected");
-            }
-            
-            FileInputStream inputStream = new FileInputStream(requestedPath.toFile());
+            FileInputStream inputStream = new FileInputStream(quoteDirectory + name);
             quote.setText(IOUtils.toString(inputStream));
-        } catch(SecurityException e) {
-            quote.setText("Invalid file path");
         } catch(java.io.FileNotFoundException e) {
             quote.setText("File not found");
         } catch(java.io.IOException e) {
@@ -125,18 +114,29 @@ public Quote getQuoteByAuthor(String name) {
     public Quote getQuoteFromAI(String topic) {
 
         Quote quote = new Quote();
-        // Create new client and generate content with prompt for a specific topic
-    
-                    
-            
+        String prompt = "Generate an inspirational quote about the following topic: " + topic;
+        String aiGeneratedQuote = getLLMResponse(prompt);
+        quote.setText(aiGeneratedQuote);    
+
         return quote;
+    }
+
+    public String getLLMResponse(String prompt) {
+        Client client = Client.builder().apiKey(apiKey).build();
+        Content systemInstruction = Content.fromParts(Part.fromText(prompt));
+        GenerateContentConfig config = GenerateContentConfig.builder()
+            .candidateCount(1)
+            .maxOutputTokens(1024)
+            .systemInstruction(systemInstruction)
+            .build();
+        GenerateContentResponse response = client.models
+            .generateContent("gemini-2.0-flash-001", "test", config);
+        return response.text();
     }
 
     public List<Quote> getAllQuotes() {
         return quotes.stream()
                 .map(quote -> new Quote(quote.getText(), quote.getAuthor(), LocalDate.now()))
                 .toList();
-        // test client connection
-        // testClientConnection();
     }
 }
