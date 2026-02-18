@@ -19,7 +19,6 @@ import com.google.genai.types.GoogleSearch;
 import com.google.genai.types.Part;
 import com.google.genai.types.Tool;
 
-
 @Service
 public class QuoteService {
 
